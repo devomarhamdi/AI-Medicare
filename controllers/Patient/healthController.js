@@ -106,7 +106,11 @@ exports.BMR = (req, res, next) => {
   });
 };
 
-// Body Fat
+/* Body Fat male: { min: 18, max: 99 },
+            female: { min: 18, max: 99 },
+            boy: { min: 6, max: 17 },
+            girl: { min: 6, max: 17 }
+*/
 exports.bodyFat = (req, res, next) => {
   const { gender, height, weight, age } = req.query;
 
@@ -127,6 +131,21 @@ exports.bodyFat = (req, res, next) => {
 
   // Calculate BMI
   const bmi = numericWeight / Math.pow(numericHeight / 100, 2);
+
+  // Check age limits based on gender
+  const ageLimits = {
+    male: { min: 18, max: 99 },
+    female: { min: 18, max: 99 },
+    boy: { min: 6, max: 17 },
+    girl: { min: 6, max: 17 }
+  };
+
+  if (
+    numericAge < ageLimits[gender.toLowerCase()].min ||
+    numericAge > ageLimits[gender.toLowerCase()].max
+  ) {
+    return next(new AppError(`Invalid age for ${gender}.`, 400));
+  }
 
   // Use BMI to estimate body fat percentage
   let bodyFatPercentage;
@@ -151,6 +170,54 @@ exports.bodyFat = (req, res, next) => {
     bodyFatPercentage: {
       value: `${bodyFatPercentage.toFixed(1)}%`,
       description: 'Estimated body fat percentage using BMI method'
+    }
+  });
+};
+
+// Water Intake
+exports.waterIntake = (req, res, next) => {
+  const { weight, activityLevel } = req.query;
+
+  // Check if required parameters are provided
+  if (!weight || !activityLevel) {
+    return next(
+      new AppError(
+        'Missing required parameters (weight or activityLevel).',
+        400
+      )
+    );
+  }
+
+  // Convert weight to number
+  const numericWeight = parseFloat(weight);
+
+  // Check if the conversion was successful
+  if (isNaN(numericWeight)) {
+    return next(new AppError('Invalid numeric input for weight.', 400));
+  }
+
+  // Define activity level multipliers (adjust as needed)
+  const activityMultipliers = {
+    sedentary: 1.0,
+    'lightly active': 1.3,
+    'moderately active': 1.6,
+    'very active': 1.8
+  };
+
+  // Check if the provided activity level is valid
+  const selectedMultiplier = activityMultipliers[activityLevel.toLowerCase()];
+  if (selectedMultiplier === undefined) {
+    return next(new AppError('Invalid activity level.', 400));
+  }
+
+  // Calculate water intake based on body weight and activity level
+  const waterIntake = numericWeight * selectedMultiplier * 0.033; // A common recommendation is 30-35 ml per kg of body weight
+
+  res.json({
+    waterIntake: {
+      value: waterIntake.toFixed(2),
+      unit: 'liters',
+      description: `Estimated daily water intake based on body weight and activity level (${activityLevel})`
     }
   });
 };

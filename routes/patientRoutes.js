@@ -22,5 +22,11 @@ router.get(
   authController.restrictTo('patient'),
   healthController.bodyFat
 );
+router.get(
+  '/waterIntake',
+  authController.protect,
+  authController.restrictTo('patient'),
+  healthController.waterIntake
+);
 
 module.exports = router;
