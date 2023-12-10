@@ -10,5 +10,17 @@ router.get(
   authController.restrictTo('patient'),
   healthController.BMI
 );
+router.get(
+  '/bmr',
+  authController.protect,
+  authController.restrictTo('patient'),
+  healthController.BMR
+);
+router.get(
+  '/bodyFat',
+  authController.protect,
+  authController.restrictTo('patient'),
+  healthController.bodyFat
+);
 
 module.exports = router;
