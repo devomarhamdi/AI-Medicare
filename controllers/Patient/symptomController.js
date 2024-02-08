@@ -11,7 +11,7 @@ const LANGUAGE = 'en-gb';
 
 // Construct the API URL with embedded parameters
 const HEALTH_SERVICE_API_URL = endpoint => {
-  const url = `https://healthservice.priaid.ch/${endpoint}?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImVzZXFhc2V4QGVtYWlsMS5pbyIsInJvbGUiOiJVc2VyIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvc2lkIjoiMTA2NzgiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3ZlcnNpb24iOiIxMDkiLCJodHRwOi8vZXhhbXBsZS5vcmcvY2xhaW1zL2xpbWl0IjoiMTAwIiwiaHR0cDovL2V4YW1wbGUub3JnL2NsYWltcy9tZW1iZXJzaGlwIjoiQmFzaWMiLCJodHRwOi8vZXhhbXBsZS5vcmcvY2xhaW1zL2xhbmd1YWdlIjoiZW4tZ2IiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL2V4cGlyYXRpb24iOiIyMDk5LTEyLTMxIiwiaHR0cDovL2V4YW1wbGUub3JnL2NsYWltcy9tZW1iZXJzaGlwc3RhcnQiOiIyMDIzLTEyLTA4IiwiaXNzIjoiaHR0cHM6Ly9hdXRoc2VydmljZS5wcmlhaWQuY2giLCJhdWQiOiJodHRwczovL2hlYWx0aHNlcnZpY2UucHJpYWlkLmNoIiwiZXhwIjoxNzA3Mzk3MzAxLCJuYmYiOjE3MDczOTAxMDF9.thU2FkhhnWiR0ydxcnPwuOSLf4ETKB_hFKLGA_xgYXU&format=${FORMAT}&language=${LANGUAGE}`;
+  const url = `https://healthservice.priaid.ch/${endpoint}?token=${API_TOKEN}&format=${FORMAT}&language=${LANGUAGE}`;
   return url;
 };
 // Get all symptoms
@@ -37,7 +37,7 @@ exports.symptoms = async (req, res, next) => {
     });
   } catch (error) {
     // Handle API request errors
-    next(new AppError('Internal Server Error', 500));
+    next(new AppError(error, 500));
   }
 };
 
