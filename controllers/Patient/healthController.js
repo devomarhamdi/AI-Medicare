@@ -83,7 +83,7 @@ exports.BMR = (req, res, next) => {
     case 'moderately active':
       tdee = bmr * 1.55;
       break;
-    case 'lightly active':
+    case 'very active':
       tdee = bmr * 1.725;
       break;
     case 'extra active':

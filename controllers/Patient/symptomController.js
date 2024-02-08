@@ -19,7 +19,6 @@ exports.symptoms = async (req, res, next) => {
   try {
     // Make a request to the health service API using fetch
     const response = await axios.get(HEALTH_SERVICE_API_URL('symptoms'));
-
     // Check for errors in the health service API response
     if (response.data.error) {
       return next(
