@@ -1,17 +1,17 @@
 const AppError = require('../../utils/appError');
 const axios = require('axios');
-const dotenv = require('dotenv');
-
-dotenv.config({ path: './config.env' });
+const getToken = require('../../utils/symptomToken');
 
 // Constants for API parameters
-const API_TOKEN = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImVzZXFhc2V4QGVtYWlsMS5pbyIsInJvbGUiOiJVc2VyIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvc2lkIjoiMTA2NzgiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3ZlcnNpb24iOiIxMDkiLCJodHRwOi8vZXhhbXBsZS5vcmcvY2xhaW1zL2xpbWl0IjoiMTAwIiwiaHR0cDovL2V4YW1wbGUub3JnL2NsYWltcy9tZW1iZXJzaGlwIjoiQmFzaWMiLCJodHRwOi8vZXhhbXBsZS5vcmcvY2xhaW1zL2xhbmd1YWdlIjoiZW4tZ2IiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL2V4cGlyYXRpb24iOiIyMDk5LTEyLTMxIiwiaHR0cDovL2V4YW1wbGUub3JnL2NsYWltcy9tZW1iZXJzaGlwc3RhcnQiOiIyMDIzLTEyLTA4IiwiaXNzIjoiaHR0cHM6Ly9hdXRoc2VydmljZS5wcmlhaWQuY2giLCJhdWQiOiJodHRwczovL2hlYWx0aHNlcnZpY2UucHJpYWlkLmNoIiwiZXhwIjoxNzA4NDQyMDgwLCJuYmYiOjE3MDg0MzQ4ODB9.HaDfbsH2OuT2_gsJBQNXaeTglUReDlt_ll2PtnX5Kb4";
+let API_TOKEN;
+getToken().then(value => (API_TOKEN = value));
 const FORMAT = 'json';
 const LANGUAGE = 'en-gb';
 
 // Construct the API URL with embedded parameters
 const HEALTH_SERVICE_API_URL = endpoint => {
   const url = `https://healthservice.priaid.ch/${endpoint}?token=${API_TOKEN}&format=${FORMAT}&language=${LANGUAGE}`;
+  // console.log(url);
   return url;
 };
 // Get all symptoms
@@ -25,7 +25,6 @@ exports.symptoms = async (req, res, next) => {
         new AppError(response.data.error.message, response.data.error.code)
       );
     }
-
     // Extract symptoms data from the response
     const symptoms = response.data;
 
@@ -35,8 +34,18 @@ exports.symptoms = async (req, res, next) => {
       symptoms
     });
   } catch (error) {
-    // Handle API request errors
-    next(new AppError(error, 500));
+    console.log(error);
+    if (error.cause instanceof AggregateError) {
+      // Handle AggregateError
+      console.error('Multiple errors occurred:');
+      for (const individualError of error.errors) {
+        console.error(individualError);
+      }
+      next(new AppError('Multiple errors occurred', 500));
+    } else {
+      // Handle other errors
+      next(new AppError(error, 500));
+    }
   }
 };
 
