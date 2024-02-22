@@ -53,6 +53,7 @@ exports.symptoms = async (req, res, next) => {
 
 // Get the diagnosis
 exports.diagnosis = async (req, res, next) => {
+  const API = req.symptomToken;
   try {
     const symptoms = req.query.symptoms;
     const gender = req.query.gender;
@@ -66,7 +67,7 @@ exports.diagnosis = async (req, res, next) => {
     }
 
     // Make a request to the health service API
-    const response = await axios.get(HEALTH_SERVICE_API_URL('diagnosis'), {
+    const response = await axios.get(HEALTH_SERVICE_API_URL('diagnosis', API), {
       params: {
         symptoms,
         gender,
@@ -95,6 +96,7 @@ exports.diagnosis = async (req, res, next) => {
 
 // Get the issue
 exports.issue = async (req, res, next) => {
+  const API_TOKEN = req.symptomToken;
   try {
     const issueId = req.query.issueId;
 
