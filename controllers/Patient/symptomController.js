@@ -3,22 +3,24 @@ const axios = require('axios');
 const getToken = require('../../utils/symptomToken');
 
 // Constants for API parameters
-let API_TOKEN;
-getToken().then(value => (API_TOKEN = value));
+// let API_TOKEN;
+// getToken().then(value => (API_TOKEN = value));
 const FORMAT = 'json';
 const LANGUAGE = 'en-gb';
 
 // Construct the API URL with embedded parameters
-const HEALTH_SERVICE_API_URL = endpoint => {
+const HEALTH_SERVICE_API_URL = (endpoint, API_TOKEN) => {
   const url = `https://healthservice.priaid.ch/${endpoint}?token=${API_TOKEN}&format=${FORMAT}&language=${LANGUAGE}`;
   // console.log(url);
   return url;
 };
 // Get all symptoms
 exports.symptoms = async (req, res, next) => {
+  const API = req.symptomToken;
+  // console.log(API);
   try {
     // Make a request to the health service API using fetch
-    const response = await axios.get(HEALTH_SERVICE_API_URL('symptoms'));
+    const response = await axios.get(HEALTH_SERVICE_API_URL('symptoms', API));
     // Check for errors in the health service API response
     if (response.data.error) {
       return next(
@@ -34,12 +36,12 @@ exports.symptoms = async (req, res, next) => {
       symptoms
     });
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     if (error.cause instanceof AggregateError) {
       // Handle AggregateError
-      console.error('Multiple errors occurred:');
+      // console.error('Multiple errors occurred:');
       for (const individualError of error.errors) {
-        console.error(individualError);
+        // console.error(individualError);
       }
       next(new AppError('Multiple errors occurred', 500));
     } else {

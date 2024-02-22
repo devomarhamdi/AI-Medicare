@@ -2,6 +2,7 @@ const express = require('express');
 const healthController = require('./../controllers/Patient/healthController');
 const symptomController = require('../controllers/Patient/symptomController.js');
 const authController = require('./../controllers/authController');
+const symptomToken = require('../utils/symptomToken.js');
 
 const router = express.Router();
 
@@ -36,6 +37,7 @@ router.get(
   '/symptoms',
   authController.protect,
   authController.restrictTo('patient'),
+  symptomToken.getToken,
   symptomController.symptoms
 );
 router.get(

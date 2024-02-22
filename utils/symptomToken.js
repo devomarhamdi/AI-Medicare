@@ -1,10 +1,11 @@
 const axios = require('axios');
 const CryptoJS = require('crypto-js');
 const dotenv = require('dotenv');
+const AppError = require('./appError');
 
 dotenv.config({ path: './config.env' });
 
-const getToken = async () => {
+exports.getToken = async (req, res, next) => {
   try {
     const uri = 'https://authservice.priaid.ch/login';
     const apiKey = process.env.apiKey;
@@ -30,11 +31,12 @@ const getToken = async () => {
 
     // Return the token from the response
     const finalToken = response.data.Token;
-    return finalToken;
+    req.symptomToken = finalToken;
+    next();
   } catch (error) {
     // Throw error if there is a problem
-    throw new Error(error);
+    next(new AppError('Error in symptom token middleware'));
   }
 };
 
-module.exports = getToken;
+// module.exports = getToken;
