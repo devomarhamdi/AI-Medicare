@@ -44,12 +44,14 @@ router.get(
   '/diagnosis',
   authController.protect,
   authController.restrictTo('patient'),
+  symptomToken.getToken,
   symptomController.diagnosis
 );
 router.get(
   '/issue',
   authController.protect,
   authController.restrictTo('patient'),
+  symptomToken.getToken,
   symptomController.issue
 );
 
