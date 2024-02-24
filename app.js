@@ -6,6 +6,7 @@ const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
 const userRouter = require('./routes/userRoutes');
 const patientRouter = require('./routes/patientRoutes');
+const doctorRouter = require('./routes/doctorRoutes');
 
 const app = express();
 
@@ -25,6 +26,7 @@ if (process.env.NODE_ENV === 'development') {
 
 app.use('/api/users', userRouter);
 app.use('/api/patients', patientRouter);
+app.use('/api/doctors', doctorRouter);
 
 app.use('/', (req, res) => {
   return res.send('Welcome to AI Medicare');
