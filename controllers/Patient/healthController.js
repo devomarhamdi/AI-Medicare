@@ -2,8 +2,8 @@ const AppError = require('../../utils/appError');
 
 // BMI
 exports.BMI = (req, res, next) => {
-  // Get input parameters from req.query
-  const { weight, height } = req.query;
+  // Get input parameters from req.body
+  const { weight, height } = req.body;
 
   // Check if all required parameters are present
   if (!weight || !height) {
@@ -42,7 +42,7 @@ exports.BMI = (req, res, next) => {
 
 // BMR
 exports.BMR = (req, res, next) => {
-  const { age, gender, weight, height, activityLevel } = req.query;
+  const { age, gender, weight, height, activityLevel } = req.body;
 
   // Check if required parameters are provided
   if (!age || !gender || !weight || !height || !activityLevel) {
@@ -112,7 +112,7 @@ exports.BMR = (req, res, next) => {
             girl: { min: 6, max: 17 }
 */
 exports.bodyFat = (req, res, next) => {
-  const { gender, height, weight, age } = req.query;
+  const { gender, height, weight, age } = req.body;
 
   // Check if required parameters are provided
   if (!gender || !height || !weight || !age) {
@@ -176,7 +176,7 @@ exports.bodyFat = (req, res, next) => {
 
 // Water Intake
 exports.waterIntake = (req, res, next) => {
-  const { weight, activityLevel } = req.query;
+  const { weight, activityLevel } = req.body;
 
   // Check if required parameters are provided
   if (!weight || !activityLevel) {

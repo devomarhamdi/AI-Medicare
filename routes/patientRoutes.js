@@ -7,25 +7,25 @@ const symptomToken = require('../utils/symptomToken.js');
 const router = express.Router();
 
 // Health Calculators
-router.get(
+router.post(
   '/bmi',
   authController.protect,
   authController.restrictTo('patient'),
   healthController.BMI
 );
-router.get(
+router.post(
   '/bmr',
   authController.protect,
   authController.restrictTo('patient'),
   healthController.BMR
 );
-router.get(
+router.post(
   '/bodyFat',
   authController.protect,
   authController.restrictTo('patient'),
   healthController.bodyFat
 );
-router.get(
+router.post(
   '/waterIntake',
   authController.protect,
   authController.restrictTo('patient'),
