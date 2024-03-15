@@ -54,5 +54,19 @@ router.get(
   symptomToken.getToken,
   symptomController.issue
 );
+router.post(
+  '/diagnosis',
+  authController.protect,
+  authController.restrictTo('patient'),
+  symptomToken.getToken,
+  symptomController.diagnosis2
+);
+router.post(
+  '/issue',
+  authController.protect,
+  authController.restrictTo('patient'),
+  symptomToken.getToken,
+  symptomController.issue2
+);
 
 module.exports = router;

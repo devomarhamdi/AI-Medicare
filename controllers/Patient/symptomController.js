@@ -127,3 +127,80 @@ exports.issue = async (req, res, next) => {
     return next(new AppError(error.response.data, 500));
   }
 };
+
+// Get the diagnosis
+exports.diagnosis2 = async (req, res, next) => {
+  const API = req.symptomToken;
+  try {
+    const symptoms = req.body.symptoms;
+    const gender = req.body.gender;
+    const yearOfBirth = req.body.year_of_birth;
+
+    // Validate required parameters
+    if (!symptoms || !gender || !yearOfBirth) {
+      return next(
+        new AppError('Symptoms, gender, and year_of_birth are required.', 400)
+      );
+    }
+
+    // Make a request to the health service API
+    const response = await axios.get(HEALTH_SERVICE_API_URL('diagnosis', API), {
+      params: {
+        symptoms,
+        gender,
+        year_of_birth: yearOfBirth
+      }
+    });
+
+    // Check for errors in the health service API response
+    if (response.data.error) {
+      return next(new AppError(response.data, response.status));
+    }
+
+    const diagnosis = response.data;
+
+    // Send the response from the health service API to the client
+    res.json({
+      status: 'success',
+      results: diagnosis.length,
+      diagnosis
+    });
+  } catch (error) {
+    // Handle other errors and pass them to the global error handler
+    return next(new AppError(error.response.data, 500));
+  }
+};
+
+// Get the issue
+exports.issue2 = async (req, res, next) => {
+  const API_TOKEN = req.symptomToken;
+  try {
+    const issueId = req.body.issueId;
+
+    // Validate required parameters
+    if (!issueId) {
+      return next(new AppError('issue id is required.', 400));
+    }
+
+    // Make a request to the health service API
+    const response = await axios.get(
+      `https://healthservice.priaid.ch/issues/${issueId}/info?token=${API_TOKEN}&format=${FORMAT}&language=${LANGUAGE}`
+    );
+
+    // Check for errors in the health service API response
+    if (response.data.error) {
+      return next(new AppError(response.data, response.status));
+    }
+
+    const issue = response.data;
+
+    // Send the response from the health service API to the client
+    res.json({
+      status: 'success',
+      issue
+    });
+  } catch (error) {
+    // Handle other errors and pass them to the global error handler
+    return next(new AppError(error.response.data, 500));
+  }
+};
