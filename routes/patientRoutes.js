@@ -31,6 +31,30 @@ router.get(
   authController.restrictTo('patient'),
   healthController.waterIntake
 );
+router.post(
+  '/bmi',
+  authController.protect,
+  authController.restrictTo('patient'),
+  healthController.BMI2
+);
+router.post(
+  '/bmr',
+  authController.protect,
+  authController.restrictTo('patient'),
+  healthController.BMR2
+);
+router.post(
+  '/bodyFat',
+  authController.protect,
+  authController.restrictTo('patient'),
+  healthController.bodyFat2
+);
+router.post(
+  '/waterIntake',
+  authController.protect,
+  authController.restrictTo('patient'),
+  healthController.waterIntake2
+);
 
 // Symptoms Checker
 router.get(
