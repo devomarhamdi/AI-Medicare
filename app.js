@@ -1,6 +1,7 @@
 const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
+const axios = require('axios');
 
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
@@ -23,6 +24,17 @@ app.use(express.json());
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
+
+const url = 'https://breast-cancer-udq5.onrender.com';
+
+axios
+  .get(url)
+  .then(response => {
+    res.json(response.data);
+  })
+  .catch(error => {
+    return console.log(error.config.url);
+  });
 
 app.use('/api/users', userRouter);
 app.use('/api/patients', patientRouter);
