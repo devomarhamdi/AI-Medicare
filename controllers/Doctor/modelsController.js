@@ -12,6 +12,6 @@ exports.breast = async (req, res, next) => {
       res.json(response.data);
     })
     .catch(error => {
-      return next(new AppError(error.response.data.error));
+      return next(new AppError(error));
     });
 };
