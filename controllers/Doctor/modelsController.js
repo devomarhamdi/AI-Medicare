@@ -7,7 +7,9 @@ exports.breast = async (req, res, next) => {
   const url = 'https://breast-cancer-udq5.onrender.com/predict';
 
   axios
-    .post(url, data)
+    .post(url, data, {
+      'Content-Type': 'application/json'
+    })
     .then(response => {
       res.json(response.data);
     })
