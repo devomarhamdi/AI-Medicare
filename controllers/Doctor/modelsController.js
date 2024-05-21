@@ -8,7 +8,9 @@ exports.breast = async (req, res, next) => {
 
   axios
     .post(url, data, {
-      'Content-Type': 'application/json'
+      headers: {
+        'Content-Type': 'application/json'
+      }
     })
     .then(response => {
       res.json(response.data);
