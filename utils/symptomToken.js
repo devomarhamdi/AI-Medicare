@@ -3,7 +3,7 @@ const CryptoJS = require('crypto-js');
 const dotenv = require('dotenv');
 const AppError = require('./appError');
 
-dotenv.config({ path: './config.env' });
+dotenv.config({ path: './.env' });
 
 exports.getToken = async (req, res, next) => {
   try {
